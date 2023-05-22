@@ -21,4 +21,4 @@ class DueDateAdmin(admin.ModelAdmin):
 class DueDateRuleAdmin(admin.ModelAdmin):
     list_display = ("tax", "criteria", "value", "day")
     list_filter = ("tax", )
-    list_per_page = 30
+    list_per_page = 40
