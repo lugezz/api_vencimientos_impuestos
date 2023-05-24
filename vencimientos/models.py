@@ -1,5 +1,13 @@
-from tabnanny import verbose
 from django.db import models
+
+PERIODICIDAD = [
+    ('A', 'Anual'),
+    ('M', 'Mensual'),
+    ('B', 'Bimestral'),
+    ('T', 'Trimestral'),
+    ('C', 'Cuatrimestral'),
+    
+]
 
 
 class Agency(models.Model):
@@ -9,11 +17,15 @@ class Agency(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'agencies'
+
 
 class Tax(models.Model):
     agency = models.ForeignKey(Agency, on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
     description = models.CharField(max_length=200, blank=True, null=True)
+    periodicidad = models.CharField(max_length=1, choices=PERIODICIDAD, default='M')
 
     class Meta:
         unique_together = ('agency', 'name')
@@ -53,3 +65,28 @@ class DueDate(models.Model):
         this_period = self.period.strftime('%m/%Y')
 
         return f'{self.tax} - {self.criteria} - {self.value} - {this_period} - {this_due_date}'
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=120)
+    description = models.CharField(max_length=200, blank=True, null=True)
+    cuit = models.CharField(max_length=11)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'companies'
+
+
+class CompaniesDueDate(models.Model):
+    tax = models.ForeignKey(Tax, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    period = models.DateField()
+    due_date = models.DateField()
+
+    def __str__(self) -> str:
+        this_due_date = self.due_date.strftime('%d/%m/%Y')
+        this_period = self.period.strftime('%m/%Y')
+
+        return f'{self.tax} - {self.company} - {this_period} - {this_due_date}'

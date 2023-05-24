@@ -1,11 +1,13 @@
 from django.contrib import admin
 
 from vencimientos.models import (
-    Agency, Criteria, DueDate, DueDateRule, Tax
+    Agency, CompaniesDueDate, Company, Criteria, DueDate,
+    DueDateRule, Tax
 )
 
 
 admin.site.register(Agency)
+admin.site.register(Company)
 admin.site.register(Criteria)
 admin.site.register(Tax)
 
@@ -21,4 +23,11 @@ class DueDateAdmin(admin.ModelAdmin):
 class DueDateRuleAdmin(admin.ModelAdmin):
     list_display = ("tax", "criteria", "value", "day")
     list_filter = ("tax", )
-    list_per_page = 40
+    list_per_page = 30
+
+
+@admin.register(CompaniesDueDate)
+class CompaniesDueDateAdmin(admin.ModelAdmin):
+    list_display = ("tax", "company", "period", "due_date")
+    list_filter = ("tax", "company")
+    list_per_page = 30
