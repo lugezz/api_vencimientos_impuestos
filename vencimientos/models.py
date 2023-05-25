@@ -6,7 +6,6 @@ PERIODICIDAD = [
     ('B', 'Bimestral'),
     ('T', 'Trimestral'),
     ('C', 'Cuatrimestral'),
-    
 ]
 
 
@@ -48,6 +47,8 @@ class DueDateRule(models.Model):
     value = models.SmallIntegerField()
     day = models.SmallIntegerField()
     next_month = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return f'{self.tax} - {self.criteria} - {self.value} - {self.day}'
@@ -59,6 +60,8 @@ class DueDate(models.Model):
     period = models.DateField()
     value = models.SmallIntegerField()
     due_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         this_due_date = self.due_date.strftime('%d/%m/%Y')
@@ -90,3 +93,11 @@ class CompaniesDueDate(models.Model):
         this_period = self.period.strftime('%m/%Y')
 
         return f'{self.tax} - {self.company} - {this_period} - {this_due_date}'
+
+
+class Holiday(models.Model):
+    date = models.DateField()
+    description = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self) -> str:
+        return f'{self.date} - {self.description}'
